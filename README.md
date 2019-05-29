@@ -4,7 +4,10 @@
 
 <div>&nbsp;</div>
 
-**HD Admin** is an open-source admin application for the Roblox platform. The system is comprised of an extensive range of features and commands designed to enhance games for both the player and developer.
+**HD Admin** is an open-source admin application for the Roblox platform.
+
+HD Admin is comprised of an extensive range of features and commands designed to enhance games for both the player and developer.
+
 <br>
 
 # Resources
