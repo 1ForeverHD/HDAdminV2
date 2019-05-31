@@ -2,8 +2,8 @@ local module = {}
 
 
 -- << RETRIEVE FRAMEWORK >>
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework) local modules = main.modules
-
+local main = _G.HDAdminMain
+local modules = main.modules
 
 
 -- << VARIABLES >>
@@ -330,7 +330,7 @@ for _, warningFrame in pairs(main.warnings:GetChildren()) do
 					end
 				elseif warningFrame.Name == "UnBan" then
 					showLoading(warningFrame, true)
-					main.network.RequestCommand:InvokeServer(main.pdata.Prefix.."undirectban "..warningFrame.PlrName.Text)
+					main.signals.RequestCommand:InvokeServer(main.pdata.Prefix.."undirectban "..warningFrame.PlrName.Text)
 					modules.PageAdmin:CreateBanland()
 					showLoading(warningFrame, false)
 					main.warnings.Visible = false
@@ -338,7 +338,7 @@ for _, warningFrame in pairs(main.warnings:GetChildren()) do
 					showLoading(warningFrame, true)
 					local userName = warningFrame.PlrName.Text
 					local id = modules.cf:GetUserId(userName)
-					main.network.RemovePermRank:InvokeServer{id, userName}
+					main.signals.RemovePermRank:InvokeServer{id, userName}
 					modules.PageAdmin:CreateRanks()
 					showLoading(warningFrame, false)
 					main.warnings.Visible = false
