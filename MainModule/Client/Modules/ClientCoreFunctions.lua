@@ -1,10 +1,11 @@
--- !! Referenced using 'main.modules.cf'
+-- Referenced using 'main.modules.cf'
 
 local module = {}
 
 
 -- << RETRIEVE MAIN FRAMEWORK >>
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework) local modules = main.modules
+local main = _G.HDAdminMain
+local modules = main.modules
 
 
 
@@ -660,7 +661,7 @@ function module:CreateNewCommandMenu(commandName, menuDetails, menuType, forceOn
 					else
 						commandNameToSend = "!"..commandName
 					end
-					main.network.RequestCommand:InvokeServer(commandNameToSend)
+					main.signals.RequestCommand:InvokeServer(commandNameToSend)
 					wait(1)
 				elseif main.commandsActive[commandName] then
 					main.commandsActive[commandName] = nil
@@ -712,7 +713,7 @@ function module:CreateNewCommandMenu(commandName, menuDetails, menuType, forceOn
 					if endChar == " " then
 						commandToRequest = string.sub(commandToRequest,1,-1)
 					end
-					main.network.RequestCommand:InvokeServer(commandToRequest)
+					main.signals.RequestCommand:InvokeServer(commandToRequest)
 				end
 				loading.Visible = false
 			end)
@@ -761,7 +762,7 @@ function module:CreateNewCommandMenu(commandName, menuDetails, menuType, forceOn
 					end
 					local commandToRequest = main.pdata.Prefix.."talk"..main.pdata.SplitKey..targetPlayerText..main.pdata.SplitKey..messageTextBox.Text
 					messageTextBox.Text = ""
-					main.network.RequestCommand:InvokeServer(commandToRequest)
+					main.signals.RequestCommand:InvokeServer(commandToRequest)
 				end
 			end)
 		
@@ -789,7 +790,7 @@ function module:CreateNewCommandMenu(commandName, menuDetails, menuType, forceOn
 			send.MouseButton1Down:Connect(function()
 				if send.AutoButtonColor then
 					module:DestroyCommandMenuFrame(frame)
-					main.network.ReplyToPrivateMessage:InvokeServer{speaker, textBox.Text}
+					main.signals.ReplyToPrivateMessage:InvokeServer{speaker, textBox.Text}
 				end
 			end)
 		
@@ -953,7 +954,7 @@ function module:CreateNewCommandMenu(commandName, menuDetails, menuType, forceOn
 				local minutes, hours, days = timeFrame.Minutes.TextBox.Text, timeFrame.Hours.TextBox.Text, timeFrame.Days.TextBox.Text
 				local details = {server=selectedToggles["AG Server"], length=selectedToggles["AJ Length"], lengthTime=minutes.."m"..hours.."h"..days.."d"}
 				module:DestroyCommandMenuFrame(frame)
-				main.network.RequestCommand:InvokeServer(main.pdata.Prefix.."directBan"..main.pdata.SplitKey..playerName..main.pdata.SplitKey..banReason, details)
+				main.signals.RequestCommand:InvokeServer(main.pdata.Prefix.."directBan"..main.pdata.SplitKey..playerName..main.pdata.SplitKey..banReason, details)
 			end)
 			spawn(function()
 				wait(0.1)
@@ -1016,7 +1017,7 @@ function module:CreateNewCommandMenu(commandName, menuDetails, menuType, forceOn
 				if selectedToggles["AG DisplayFrom"] == "Enabled" then
 					displayFrom = true
 				end
-				local data = main.network.RetrieveBroadcastData:InvokeServer{["Title"] = titleTextBox.Text, ["DisplayFrom"] = displayFrom, ["Color"] = colorTextBox.Text, ["Message"] = messageTextBox.Text}
+				local data = main.signals.RetrieveBroadcastData:InvokeServer{["Title"] = titleTextBox.Text, ["DisplayFrom"] = displayFrom, ["Color"] = colorTextBox.Text, ["Message"] = messageTextBox.Text}
 				return data
 			end
 			local retrievedDataFunction = function(data)
@@ -1033,7 +1034,7 @@ function module:CreateNewCommandMenu(commandName, menuDetails, menuType, forceOn
 				fr.Visible = true
 			end
 			local broadcastFunction = function()
-				main.network.ExecuteBroadcast:InvokeServer()
+				main.signals.ExecuteBroadcast:InvokeServer()
 			end
 			setupFinalResult(frame, submitButton, loadingButton, serverInvocationFunction, retrievedDataFunction, broadcastFunction)
 			
@@ -1215,7 +1216,7 @@ function module:CreateNewCommandMenu(commandName, menuDetails, menuType, forceOn
 					table.insert(answers, v.SearchFrame.TextBox.Text)
 				end
 				--
-				local data = main.network.RetrievePollData:InvokeServer{["VoteTime"] = voteTime, ["Question"] = question, ["Answers"] = answers, ["Server"] = server, ["ShowResultsTo"] = showResultsTo, ["PlayerArg"] = playerArg}
+				local data = main.signals.RetrievePollData:InvokeServer{["VoteTime"] = voteTime, ["Question"] = question, ["Answers"] = answers, ["Server"] = server, ["ShowResultsTo"] = showResultsTo, ["PlayerArg"] = playerArg}
 				--
 				return data
 			end
@@ -1224,7 +1225,7 @@ function module:CreateNewCommandMenu(commandName, menuDetails, menuType, forceOn
 				fr.Visible = true--]]
 			end
 			local broadcastFunction = function()
-				main.network.ExecutePoll:InvokeServer()
+				main.signals.ExecutePoll:InvokeServer()
 			end
 			setupFinalResult(frame, submitButton, loadingButton, serverInvocationFunction, retrievedDataFunction, broadcastFunction)
 			
@@ -1387,7 +1388,7 @@ function module:CreateNewCommandMenu(commandName, menuDetails, menuType, forceOn
 				local server = selectedToggles["AC Server"]
 				local playerArg = playerTextBox.Text:gsub(" ", function(c) return "" end)
 				--
-				local data = main.network.RetrieveAlertData:InvokeServer{
+				local data = main.signals.RetrieveAlertData:InvokeServer{
 					["Title"] = title,
 					["Message"] = message,
 					["Server"] = server,
@@ -1402,7 +1403,7 @@ function module:CreateNewCommandMenu(commandName, menuDetails, menuType, forceOn
 				fr.Visible = true
 			end
 			local broadcastFunction = function()
-				main.network.ExecuteAlert:InvokeServer()
+				main.signals.ExecuteAlert:InvokeServer()
 			end
 			setupFinalResult(frame, submitButton, loadingButton, serverInvocationFunction, retrievedDataFunction, broadcastFunction)
 			
