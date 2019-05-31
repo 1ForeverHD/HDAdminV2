@@ -2,7 +2,8 @@ local module = {}
 
 
 -- << RETRIEVE FRAMEWORK >>
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework) local modules = main.modules
+local main = _G.HDAdminMain
+local modules = main.modules
 
 
 
@@ -116,7 +117,7 @@ local function setupEnterPress(props)
 					if endChar == " " then
 						commandToRequest = string.sub(commandToRequest,1,-1)
 					end
-					main.network.RequestCommand:InvokeServer(commandToRequest)
+					main.signals.RequestCommand:InvokeServer(commandToRequest)
 				end
 			end
 		end
