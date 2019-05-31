@@ -27,8 +27,7 @@
 # API
 ## Retrieving HD
 ```lua
-local hdClient = game:GetService("ReplicatedStorage"):WaitForChild("HDAdminClient")
-local hdMain = require(hdClient:WaitForChild("SharedModules").MainFramework):CheckInitialized(hdClient)
+local hdMain = require(game:GetService("ReplicatedStorage"):WaitForChild("HDAdminSetup")):GetMain()
 local hd = hdMain.modules.API
 ```
 
