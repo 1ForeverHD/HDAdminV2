@@ -2,7 +2,8 @@ local module = {}
 
 
 -- << RETRIEVE FRAMEWORK >>
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework) local modules = main.modules
+local main = _G.HDAdminMain
+local modules = main.modules
 
 
 
@@ -105,7 +106,7 @@ end
 
 -- << MAIN >>
 coroutine.wrap(function()
-	local initialized = main.Initialized or main.container.Assets.Bindables.Initialized.Event:Wait()
+	local initialized = main.initialized or main.client.Signals.Initialized.Event:Wait()
 	while true do
 		updating = true
 		for i,key in pairs(keys) do
@@ -169,7 +170,7 @@ coroutine.wrap(function()
 						--print("BroadcastCheck: ".. timeNow - statValue.."    |    ".. currentBroadcastId.." : "..data.BroadcastId)
 						if statValue > timeNow - 30 and currentBroadcastId ~= data.BroadcastId then
 							currentBroadcastId = data.BroadcastId
-							main.network.GlobalAnnouncement:FireAllClients(data.BroadcastData)
+							main.signals.GlobalAnnouncement:FireAllClients(data.BroadcastData)
 						end
 					end
 				end
