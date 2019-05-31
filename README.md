@@ -9,7 +9,8 @@
 <br>
 
 # Resources
-- MainModule: https://www.roblox.com/library/2686494999/HD
+- Creating a command: https://devforum.roblox.com/t/HD/281315
+- MainModule: https://www.roblox.com/library/3239236979/HD
 - Loader: https://www.roblox.com/library/857927023/HD
 <br>
 
