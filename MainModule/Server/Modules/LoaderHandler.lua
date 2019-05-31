@@ -2,101 +2,32 @@ local module = {}
 
 
 -- << RETRIEVE FRAMEWORK >>
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework) local modules = main.modules
+local main = _G.HDAdminMain
+local modules = main.modules
 local commandInfoForClient = {"Contributors", "Prefixes", "Rank", "Aliases", "Tags", "Description", "Args", "Loopable"}
 
 
 
-function module:Setup(loaderFolder)
+function module:Setup()
 	
-	-- Setup CustomFeatures
-	local customFeatures = loaderFolder:FindFirstChild("CustomFeatures")
-	if customFeatures then
-		for _, feature in pairs(customFeatures:GetChildren()) do
-			if feature.Name == "Commands" then
-				main.modules.cf:SetupCommands(feature, true)
-				local customClientCommands = feature:FindFirstChild("ClientCommands")
-				if customClientCommands then
-					customClientCommands.Parent = main.container.Assets
-				end
-			elseif feature.Name == "Morphs" or feature.Name == "Tools" then
-				local folder = main.assets:FindFirstChild(feature.Name)
-				if folder then
-					for _, asset in pairs(feature:GetChildren()) do
-						asset.Parent = folder
-					end
-				end
-				if feature.Name == "Tools" then
-					local locationsToScan = {main.lighting, main.rs, main.ss, main.starterPack}
-					for _, l in pairs(locationsToScan) do
-						for a,b in pairs(l:GetDescendants()) do
-							if b:IsA("Tool") and b.Parent.Name ~= "BuildingTools" then
-								table.insert(main.listOfTools, b)
-							end
-						end
-					end
-				end
+	--Grab all tools
+	local locationsToScan = {main.lighting, main.rs, main.ss, main.starterPack}
+	for _, l in pairs(locationsToScan) do
+		for a,b in pairs(l:GetDescendants()) do
+			if b:IsA("Tool") and b.Parent.Name ~= "BuildingTools" then
+				table.insert(main.listOfTools, b)
 			end
 		end
 	end
-	
+					
 	--Setup morphNames and toolNames
-	for _, morph in pairs(main.assets.Morphs:GetChildren()) do
+	for _, morph in pairs(main.server.Morphs:GetChildren()) do
 		main.morphNames[tostring(morph.Name)] = true
 	end
 	for _, tool in pairs(main.listOfTools) do
 		main.toolNames[tostring(tool.Name)] = true
 	end
 	
-	-- Update Settings
-	local settingsToFill = {
-		NoticeSoundId = 2865227271;
-		NoticeVolume = 0.1;
-		NoticePitch = 1;
-		ErrorSoundId = 2865228021;
-		ErrorVolume = 0.1;
-		ErrorPitch = 1;
-		AlertSoundId = 3140355872;
-		AlertVolume = 0.5;
-		AlertPitch = 1;
-		ScaleLimit = 4;
-		IgnoreScaleLimit = 3;
-		VIPServerCommandBlacklist = {"permRank", "permBan", "globalAnnouncement"};
-		ViewBanland	= 3;
-		GearBlacklist = {};
-		IgnoreGearBlacklist = 6;
-		Banned = {};
-		WarnIncorrectPrefix = true;
-		RankRequiredToViewPage		= {
-			["Commands"]		= 0;
-			["Admin"]			= 0;
-			["Settings"]		= 0;
-		};
-		RankRequiredToViewRank		= {				-- || The rank categories on the 'Ranks' subPage under Admin ||
-			["Owner"]			= 0;
-			["HeadAdmin"]		= 0;
-			["Admin"]			= 0;
-			["Mod"]				= 0;
-			["VIP"]				= 0;
-			["NonAdmin"]		= 0;
-		};
-		RankRequiredToViewRankType	= {
-			["Owner"]			= 0;
-			["SpecificUsers"]	= 4;
-			["Gamepasses"] 		= 0;
-			["Assets"] 			= 0;
-			["Groups"] 			= 0;
-			["Friends"] 		= 0;
-			["FreeAdmin"] 		= 0;
-			["VipServerOwner"] 	= 0;
-		};
-	}
-	
-	for sName, sValue in pairs(settingsToFill) do
-		if main.settings[sName] == nil then
-			main.settings[sName] = sValue
-		end
-	end
 	--
 	local newRankRequiredToViewRankType = {}
 	for subSettingName, rankId in pairs(main.settings.RankRequiredToViewRankType) do
@@ -292,8 +223,6 @@ function module:Setup(loaderFolder)
 		main.blacklistedVipServerCommands[string.lower(v)] = true
 	end
 	
-	main.container.Assets.Bindables.LoaderSetup:Fire()
-	main.loaderSetup = true
 end
 
 
