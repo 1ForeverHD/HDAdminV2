@@ -2,7 +2,9 @@ local module = {}
 
 
 -- << RETRIEVE FRAMEWORK >>
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework) local modules = main.modules local settings = main.settings
+local main = _G.HDAdminMain
+local modules = main.modules
+local settings = main.settings
 
 
 
@@ -166,7 +168,7 @@ function module:ParseMessage(speaker, originalMessage, directlyFromChat, extraDe
 				--Check if Donor command and Speaker has Donor OR rank >= 4
 				elseif command.Rank == "Donor" and (not speakerData.Donor or (commandPrefix ~= main.settings.UniversalPrefix and speakerData.Rank < 4)) then
 					errorNotice = modules.cf:FormatNotice("ParserInvalidDonor")
-					main.network.ShowPage:FireClient(speaker, {"Special", "Donor"})
+					main.signals.ShowPage:FireClient(speaker, {"Special", "Donor"})
 						
 				--Check if Loop command and Speaker has permission to use
 				elseif loops > 1 and speakerData.Rank < loopRank then
@@ -310,7 +312,7 @@ function module:ParseMessage(speaker, originalMessage, directlyFromChat, extraDe
 										amount = #plrChangeInfo.Ranked.." people"
 									end
 									local notice = modules.cf:FormatNotice("ParserSpeakerRank", command.Name, amount, targetRankName)
-									main.network.Notice:FireClient(speaker, notice)
+									main.signals.Notice:FireClient(speaker, notice)
 								end	
 								if #plrChangeInfo.Unranked > 0 then
 									local amount = "1 person."
@@ -340,7 +342,7 @@ function module:ParseMessage(speaker, originalMessage, directlyFromChat, extraDe
 			
 			--Speaker error message
 			if errorNotice then
-				main.network.Error:FireClient(speaker, errorNotice)
+				main.signals.Error:FireClient(speaker, errorNotice)
 			end
 			
 		end
