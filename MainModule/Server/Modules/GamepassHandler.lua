@@ -1,7 +1,8 @@
 local module = {}
 
 
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework) local modules = main.modules
+local main = _G.HDAdminMain
+local modules = main.modules
 
 
 --Purchase and receive gamepasses
