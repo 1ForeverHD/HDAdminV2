@@ -3,7 +3,7 @@ local module = {}
 
 
 -- << RETRIEVE FRAMEWORK >>
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework)
+local main = _G.HDAdminMain
 local modules = main.modules
 local settings = main.settings
 
@@ -23,7 +23,7 @@ function module:SetupItem(player, itemName, playerRespawned)
 			modules.cf:Movement(false, player)
 			modules.cf:SetTransparency(player.Character, 1)
 			if item:FindFirstChild("FreezeClone") then
-				main.network.ChangeCameraSubject:FireClient(player, (item.FreezeClone.Humanoid))
+				main.signals.ChangeCameraSubject:FireClient(player, (item.FreezeClone.Humanoid))
 			end
 			
 		elseif itemName == "JailCell" then
@@ -34,7 +34,7 @@ function module:SetupItem(player, itemName, playerRespawned)
 			local controllerHumanoid = modules.cf:GetHumanoid(player)
 			if plr and controllerHumanoid then
 				modules.MorphHandler:BecomeTargetPlayer(player, plr.UserId)
-				main.network.ChangeCameraSubject:FireClient(player, (controllerHumanoid))
+				main.signals.ChangeCameraSubject:FireClient(player, (controllerHumanoid))
 				modules.cf:CreateFakeName(player, plr.Name)
 			else
 				modules.cf:RemoveControlPlr(player)
@@ -44,7 +44,7 @@ function module:SetupItem(player, itemName, playerRespawned)
 			local controller = item.Value
 			local controllerHumanoid = modules.cf:GetHumanoid(controller)
 			if controller and controllerHumanoid then
-				main.network.ChangeCameraSubject:FireClient(player, (controllerHumanoid))
+				main.signals.ChangeCameraSubject:FireClient(player, (controllerHumanoid))
 				--modules.cf:SetTransparency(player.Character, 1, true)
 				--modules.cf:Movement(false, player)
 				player.Character.Parent = nil
