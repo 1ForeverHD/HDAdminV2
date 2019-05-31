@@ -2,7 +2,8 @@ local module = {}
 
 
 -- << RETRIEVE FRAMEWORK >>
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework) local modules = main.modules
+local main = _G.HDAdminMain
+local modules = main.modules
 
 
 
@@ -44,7 +45,7 @@ end
 function module:CreateRanks()
 	coroutine.wrap(function()
 		
-		local ranksInfo = main.network.RetrieveRanksInfo:InvokeServer()
+		local ranksInfo = main.signals.RetrieveRanksInfo:InvokeServer()
 		local permRanksInfo = ranksInfo.PermRanks
 		local ranksToSort = ranksInfo.Ranks
 		local permissions = ranksInfo.Permissions
@@ -230,7 +231,7 @@ end
 function module:CreateServerRanks()
 	coroutine.wrap(function()
 	
-		local serverRankInfo = main.network.RetrieveServerRanks:InvokeServer()
+		local serverRankInfo = main.signals.RetrieveServerRanks:InvokeServer()
 		
 		--Organise ranks
 		local rankPositions = {}
@@ -322,7 +323,7 @@ function module:CreateBanland()
 		else
 			
 			--Retrieve Info
-			local banlandInfo = main.network.RetrieveBanland:InvokeServer()
+			local banlandInfo = main.signals.RetrieveBanland:InvokeServer()
 			local canModifyBans = false
 			if main.pdata.Rank >= (main.commandRanks.directban or 4) then
 				canModifyBans = true
