@@ -2,7 +2,8 @@ local hd = {}
 
 
 -- << RETRIEVE FRAMEWORK >>
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework) local modules = main.modules
+local main = _G.HDAdminMain
+local modules = main.modules
 
 
 
@@ -21,7 +22,7 @@ function hd:Notice(player, message)
 			modules.Notices:Notice("Notice", "Game Notice", message)
 		end
 	else
-		main.network.Notice:FireClient(player, {"Game Notice", message})
+		main.signals.Notice:FireClient(player, {"Game Notice", message})
 	end
 end
 
@@ -31,7 +32,7 @@ function hd:Error(player, message)
 			modules.Notices:Notice("Error", "Game Notice", message)
 		end
 	else
-		main.network.Error:FireClient(player, {"Game Notice", message})
+		main.signals.Error:FireClient(player, {"Game Notice", message})
 	end
 end
 
