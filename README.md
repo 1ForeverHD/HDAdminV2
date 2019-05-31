@@ -80,13 +80,25 @@ Displays an error notification to the specified player. If used on the client, '
 
 <br>
 
+# API Examples
+## Invisible TopBar
+```lua
+--In a Local Script
+local hdMain = require(game:GetService("ReplicatedStorage"):WaitForChild("HDAdminSetup")):GetMain()
+local hd = hdMain.modules.API
+hd:SetTopbarTransparency(1)
+```
 
-### Admin Pad Example
+<div align="left">
+    <img src="assets/topbar.png" alt="Invisible TopBar" height="40" />
+</div>
+
+## Admin Pad
 ```lua
 --In a Server Script
 
 --Retrieve API
-local hdContainer = game:GetService("ReplicatedStorage"):WaitForChild("HDAdminContainer") local hdMain = require(hdContainer:WaitForChild("SharedModules").MainFramework):CheckInitialized(hdContainer)
+local hdMain = require(game:GetService("ReplicatedStorage"):WaitForChild("HDAdminSetup")):GetMain()
 local hd = hdMain.modules.API
 
 --Define the rank-to-reward and setup the corresponding rankId and rankName
@@ -129,6 +141,9 @@ touchPart.Touched:Connect(function(hit)
 	end
 end)
 ```
+
+<a><img src="https://media.giphy.com/media/fu2lfk7vhlHqkYRwGs/giphy.gif" /></a>
+
 
 You can take a completed copy [here](https://www.roblox.com/library/3076171971/HD-Admin-Pad).
 
