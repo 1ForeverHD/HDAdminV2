@@ -146,7 +146,7 @@ end)
 <a><img src="https://media.giphy.com/media/fu2lfk7vhlHqkYRwGs/giphy.gif" /></a>
 
 
-You can take a completed copy [here](https://www.roblox.com/library/3076171971/HD-Admin-Pad).
+You can take a completed copy [here](https://www.roblox.com/library/3105433364/HD).
 
 <br>
 
