@@ -2,7 +2,9 @@ local module = {}
 
 
 -- << RETRIEVE FRAMEWORK >>
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework) local modules = main.modules local settings = main.settings
+local main = _G.HDAdminMain
+local modules = main.modules
+local settings = main.settings
 
 
 
@@ -191,7 +193,7 @@ function module:Process(commandArgsReal, args, commandPrefix, commandName, speak
 			local morphName = argToProcess
 			argToProcess = nil
 			if morphName then
-				for i,v in pairs(main.assets.Morphs:GetChildren()) do
+				for i,v in pairs(main.morphs:GetChildren()) do
 					local mName = string.lower(v.Name)
 					if mName == morphName then
 						argToProcess = v
