@@ -2,7 +2,9 @@ local hd = {}
 
 
 -- << RETRIEVE FRAMEWORK >>
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework) local modules = main.modules
+local main = _G.HDAdminMain
+local modules = main.modules
+
 
 
 
@@ -58,25 +60,6 @@ function hd:GetRank(player)
 	end
 end
 
-
---[[
-local hdContainer = game:GetService("ReplicatedStorage"):WaitForChild("HDAdminContainer") local hdMain = require(hdContainer.SharedModules.MainFramework):CheckInitialized(hdContainer)
-local hd = hdMain.modules.API
-local rankId, rankName, rankType = hd:GetRank(game.Players.ForeverHD)
-print(rankId, rankName, rankType)
-
-local hdContainer = game:GetService("ReplicatedStorage"):WaitForChild("HDAdminContainer") local hdMain = require(hdContainer.SharedModules.MainFramework):CheckInitialized(hdContainer)
-local hd = hdMain.modules.API
-local player = game.Players.ForeverHD
-hd:UnRank(player)
-
-local hdContainer = game:GetService("ReplicatedStorage"):WaitForChild("HDAdminContainer") local hdMain = require(hdContainer.SharedModules.MainFramework):CheckInitialized(hdContainer)
-local hd = hdMain.modules.API
-local player = game.Players.ForeverHD
-hd:SetRank(player, 1, "s")
-
--- Check arguments have default values
---]]
 
 
 return hd
