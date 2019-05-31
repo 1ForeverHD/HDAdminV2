@@ -2,7 +2,8 @@ local module = {}
 
 
 -- << RETRIEVE FRAMEWORK >>
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework) local modules = main.modules
+local main = _G.HDAdminMain
+local modules = main.modules
 local commandInfoForClient = {"Contributors", "Prefixes", "Rank", "Aliases", "Tags", "Description", "Args", "Loopable"}
 
 
@@ -165,7 +166,7 @@ function module:CreateFakeBodyPart(character, bodyPart)
 		local mesh = bodyPart:FindFirstChildOfClass("SpecialMesh")
 		if bodyPart.Name == "Head" and mesh then
 			if mesh.MeshType == Enum.MeshType.Head then
-				fakePart = main.assets.FakeHead:Clone()
+				fakePart = main.server.Assets.FakeHead:Clone()
 				local size = bodyPart.Size
 				local scaleUp = mesh.Scale.Y/1.25
 				fakePart.Size = Vector3.new(size.X*0.6*scaleUp, size.Y*1.2*scaleUp, size.Z*1.19*scaleUp)
@@ -411,7 +412,7 @@ local function prepareJointVerifier(humanoid)
 		local disableDeath = Instance.new("RemoteFunction")
 		disableDeath.Name = "SetDeathEnabled"
 		disableDeath.Parent = humanoid
-		local validator = main.assets.PackageValidator:Clone()
+		local validator = main.server.Assets.PackageValidator:Clone()
 		validator.Parent = humanoid	
 		verifyJoints = Instance.new("RemoteFunction")
 		verifyJoints.Name = "VerifyJoints"
@@ -647,7 +648,7 @@ function module:Morph(plr, morph)
 	end
 end
 --[[
-for a,b in pairs(game.ServerScriptService.MainModule.Server.Assets.Morphs:GetDescendants()) do
+for a,b in pairs(game.ServerScriptService.MainModule.Server.Morphs:GetDescendants()) do
 	if b:IsA("Decal") and b.Name ~= "face" and b.Parent.Name == "Head" then
 		print("CHANGED: ".. b.Name.." | "..b.Parent.Parent.Name)
 		b.Name = "face"
@@ -655,21 +656,30 @@ for a,b in pairs(game.ServerScriptService.MainModule.Server.Assets.Morphs:GetDes
 end
 --]]
 
+local bundleCache = {} -- cache HumanoidDescriptions retrieved from bundles to reduce API calls
 function module:ApplyBundle(humanoid, bundleId)
-	local success, bundleInfo = pcall(function() return main.assetService:GetBundleDetailsAsync(bundleId) end)
-	if success and bundleInfo then
-		local outfitId = 0
-		for _,item in pairs(bundleInfo.Items) do
-			if item.Type == "UserOutfit" then
-				outfitId = item.Id
-				break
+	local HumanoidDescription = bundleCache[bundleId]
+	if not HumanoidDescription then
+		local success, bundleDetails = pcall(function() return main.server.Assetservice:GetBundleDetailsAsync(bundleId) end)
+		if success and bundleDetails then
+			for _, item in next, bundleDetails.Items do
+				if item.Type == "UserOutfit" then
+					success, HumanoidDescription = pcall(function() return main.players:GetHumanoidDescriptionFromOutfitId(item.Id) end)
+					bundleCache[bundleId] = HumanoidDescription
+					break
+				end
 			end
 		end
-		if humanoid and outfitId > 0 then
-			local bundleDesc = main.players:GetHumanoidDescriptionFromOutfitId(outfitId)
-			humanoid:ApplyDescription(bundleDesc)
+	end
+	if not HumanoidDescription then return end
+	local newDescription = humanoid:GetAppliedDescription()
+	local defaultDescription = Instance.new("HumanoidDescription")
+	for _, property in next, {"BackAccessory", "BodyTypeScale", "ClimbAnimation", "DepthScale", "Face", "FaceAccessory", "FallAnimation", "FrontAccessory", "GraphicTShirt", "HairAccessory", "HatAccessory", "Head", "HeadColor", "HeadScale", "HeightScale", "IdleAnimation", "JumpAnimation", "LeftArm", "LeftArmColor", "LeftLeg", "LeftLegColor", "NeckAccessory", "Pants", "ProportionScale", "RightArm", "RightArmColor", "RightLeg", "RightLegColor", "RunAnimation", "Shirt", "ShouldersAccessory", "SwimAnimation", "Torso", "TorsoColor", "WaistAccessory", "WalkAnimation", "WidthScale"} do
+		if HumanoidDescription[property] ~= defaultDescription[property] then -- property is not the default value
+			newDescription[property] = HumanoidDescription[property]
 		end
 	end
+	humanoid:ApplyDescription(newDescription)
 end
 
 
