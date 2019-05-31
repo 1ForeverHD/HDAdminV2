@@ -1,14 +1,36 @@
--- !! Referenced using 'main.modules.cf'
+-- Referenced using 'main.modules.cf'
 
 local module = {}
 
 
 -- << RETRIEVE FRAMEWORK >>
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework) local modules = main.modules
+local main = _G.HDAdminMain
+local modules = main.modules
 
 
 
 -- << FUNCTIONS >>
+function module:WaitForEvent(...)
+	local event
+	local firstArg = ({...})[1]
+	if typeof(firstArg) == "Instance" and firstArg:IsA("BindableEvent") then
+		event = firstArg
+	else
+		event = Instance.new("BindableEvent")
+	end
+	local signals = {}
+	for _,e in pairs({...}) do
+		if e ~= firstArg then
+			signals[#signals + 1] = e:Connect(function()
+				event:Fire()
+			end)
+		end
+	end
+	event.Event:Wait()
+	event:Destroy()
+	for _,s in pairs(signals) do s:Disconnect() end
+end
+
 function module:CreateSound(props)
 	local sound = Instance.new("Sound")
 	for propName, value in pairs(props) do
@@ -327,6 +349,15 @@ function module:CheckIfValidSound(soundId)
 		return true
 	else
 		return false
+	end
+end
+
+function module:GetChar(plr)
+	if plr == nil then
+		plr = main.player
+	end
+	if plr then
+		return plr.Character
 	end
 end
 
