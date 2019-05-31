@@ -2,7 +2,8 @@ local module = {}
 
 
 -- << RETRIEVE FRAMEWORK >>
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework) local modules = main.modules
+local main = _G.HDAdminMain
+local modules = main.modules
 
 
 
@@ -31,7 +32,7 @@ spawn(function()
 end)
 
 --Setup RemoteFunctions and RemoteEvents
-for _, object in pairs(main.network:GetChildren()) do
+for _, object in pairs(main.signals:GetChildren()) do
 	
 	--Remove functions
 	if object:IsA("RemoteFunction") then
@@ -58,8 +59,9 @@ for _, object in pairs(main.network:GetChildren()) do
 				
 				---------------------------------------------
 				if rfunction.Name == "RetrieveData" then
-					if not main.loaderSetup then
-						main.container.Assets.Bindables.LoaderSetup.Event:Wait()
+					
+					if not main.initialized then
+						main.signals.Initialized.Event:Wait()
 					end
 					if not pdata or not pdata.SetupData then
 						repeat wait(0.1) pdata = main.pd[player] until (pdata and pdata.SetupData) or not player
@@ -263,12 +265,12 @@ for _, object in pairs(main.network:GetChildren()) do
 						else
 							local targetPlayers = modules.Qualifiers:ParseQualifier(data.PlayerArg, player)
 							for plr,_ in pairs(targetPlayers) do
-								main.network.CreateAlert:FireClient(plr, {data.Title, data.Message})
+								main.signals.CreateAlert:FireClient(plr, {data.Title, data.Message})
 							end
 							
 							
 						end
-						main.network.Notice:FireClient(player, {"HD Admin", successMessage})
+						main.signals.Notice:FireClient(player, {"HD Admin", successMessage})
 						alertData[player] = nil
 						return true
 					end
@@ -414,7 +416,7 @@ for _, object in pairs(main.network:GetChildren()) do
 							return false
 						end
 						pollData[player] = nil
-						main.network.Notice:FireClient(player, {"HD Admin", successMessage})
+						main.signals.Notice:FireClient(player, {"HD Admin", successMessage})
 						return true
 					end
 					modules.cf:FormatAndFireError(player, "PollFail")
@@ -499,7 +501,7 @@ for _, object in pairs(main.network:GetChildren()) do
 					for i, plr in pairs(main.players:GetChildren()) do
 						local plrHead = modules.cf:GetHead(plr)
 						if plr ~= player and plrHead and player:DistanceFromCharacter(plrHead.Position) <= 100 then
-							main.network.ExecuteClientCommand:FireClient(plr, {player, args, commandName, {}})
+							main.signals.ExecuteClientCommand:FireClient(plr, {player, args, commandName, {}})
 						end
 					end
 				end
@@ -515,23 +517,18 @@ end
 
 
 -- << MESSAGING SERVICE >>
-print("HD Admin test message for ForeverHD | GlobalVote 1")
 local testSub
 if pcall(function() testSub = main.messagingService:SubscribeAsync("TestSub", function() end) end) then
-	print("HD Admin test message for ForeverHD | GlobalVote 2")
 	testSub:Disconnect()
 	for _, topicName in pairs(topics) do
 		main.messagingService:SubscribeAsync(topicName, function(message)
 			local data = message.Data
 			
 			if topicName == "BeginPoll" then
-				print("HD Admin test message for ForeverHD | BEGIN POLL 1 : ".. tostring(data.UniquePollTopic))
 				local newData, scores = modules.cf:BeginPoll(data)
-				print("HD Admin test message for ForeverHD | BEGIN POLL 2 : ".. tostring(data.UniquePollTopic))
 				main.messagingService:PublishAsync(data.UniquePollTopic, scores)
 				
 			elseif topicName == "DisplayPollResultsToServer" then
-				print("HD Admin test message for ForeverHD | DISPLAY RESULTS TO EVERYONE")
 				for i, plr in pairs(main.players:GetChildren()) do
 					modules.cf:DisplayPollResults(plr, data)
 				end	
@@ -542,7 +539,7 @@ if pcall(function() testSub = main.messagingService:SubscribeAsync("TestSub", fu
 			
 			elseif topicName == "GlobalAlert" then
 				for i,plr in pairs(main.players:GetChildren()) do
-					main.network.CreateAlert:FireClient(plr, {data.Title, data.Message})
+					main.signals.CreateAlert:FireClient(plr, {data.Title, data.Message})
 				end
 				
 			end
