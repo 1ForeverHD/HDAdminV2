@@ -2,7 +2,8 @@ local module = {}
 
 
 -- << RETRIEVE FRAMEWORK >>
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework) local modules = main.modules
+local main = _G.HDAdminMain
+local modules = main.modules
 
 
 
@@ -82,7 +83,7 @@ for i, theme in pairs(themeColors) do
 	box.MouseButton1Down:Connect(function()
 		if themeDe then
 			themeDe = false
-			main.network.ChangeSetting:InvokeServer{"Theme", themeName}
+			main.signals.ChangeSetting:InvokeServer{"Theme", themeName}
 			updateThemeSelection(themeName, themeColor)
 			themeDe = true
 		end
@@ -144,7 +145,7 @@ for a,b in pairs(pages.custom:GetChildren()) do
 				textBox.Visible = false
 				textLabel.Visible = true
 				textLabel.Text = "Loading..."
-				local returnMsg = main.network.ChangeSetting:InvokeServer{settingName, newValue}
+				local returnMsg = main.signals.ChangeSetting:InvokeServer{settingName, newValue}
 				if returnMsg == "Success" then
 					updateSettings()
 					local noticeType = "Notice"
@@ -193,7 +194,7 @@ restore.MouseButton1Down:Connect(function()
 			restoreDe = 2
 			loading.Blocker.Visible = true
 			loading.TextLabel.Text = "Loading..."
-			local returnMsg = main.network.RestoreDefaultSettings:InvokeServer()
+			local returnMsg = main.signals.RestoreDefaultSettings:InvokeServer()
 			if returnMsg == "Success" then
 				updateSettings()
 				modules.PageCommands:CreateCommands()
