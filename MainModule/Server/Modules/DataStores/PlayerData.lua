@@ -2,7 +2,9 @@ local module = {}
 
 
 -- << RETRIEVE FRAMEWORK >>
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework) local modules = main.modules local settings = main.settings
+local main = _G.HDAdminMain
+local modules = main.modules
+local settings = main.settings
 
 
 
@@ -18,16 +20,16 @@ local playerDataStore = main.dataStoreService:GetDataStore("HDAdminPlayerData"..
 local defaultSettingsToAdd = {"NoticeSoundId", "NoticeVolume", "NoticePitch", "ErrorSoundId", "ErrorVolume", "ErrorPitch", "AlertSoundId", "AlertVolume", "AlertPitch", "Prefix", "SplitKey"}
 local defaultSettings = {}
 coroutine.wrap(function()
-	if not main.loaderSetup then
-		main.container.Assets.Bindables.LoaderSetup.Event:Wait()
+	if not main.initialized then
+		main.client.Signals.Initialized.Event:Wait()
 	end
 	for i,v in pairs(defaultSettingsToAdd) do
 		defaultSettings[v] = settings[v]
 	end
 end)()
 local function getDataTemplate()
-	if not main.loaderSetup then
-		main.container.Assets.Bindables.LoaderSetup.Event:Wait()
+	if not main.initialized then
+		main.client.Signals.Initialized.Event:Wait()
 	end
 	return{
 		
@@ -139,9 +141,9 @@ function module:ChangeStat(player, statName, changeValue)
 		--end
 		main.pd[player][statName] = newValue
 		main.pd[player].DataToUpdate = true
-		main.network.ChangeStat:FireClient(player, {statName, newValue})
+		main.signals.ChangeStat:FireClient(player, {statName, newValue})
 		if statName == "Rank" then
-			main.network.RankChanged:FireClient(player)
+			main.signals.RankChanged:FireClient(player)
 		end
 	end
 end
@@ -151,7 +153,7 @@ function module:InsertStat(player, locationName, newValue)
 	if main.pd[player][locationName] then
 		table.insert(main.pd[player][locationName], newValue)
 		main.pd[player].DataToUpdate = true
-		main.network.InsertStat:FireClient(player, {locationName, newValue})
+		main.signals.InsertStat:FireClient(player, {locationName, newValue})
 	end
 end
 
@@ -163,7 +165,7 @@ function module:RemoveStat(player, locationName, newValue)
 			if tostring(v) == tostring(newValue) then
 				table.remove(main.pd[player][locationName], i)
 				main.pd[player].DataToUpdate = true
-				main.network.RemoveStat:FireClient(player, {locationName, newValue})
+				main.signals.RemoveStat:FireClient(player, {locationName, newValue})
 				break
 			end
 		end
@@ -244,7 +246,8 @@ end)
 -- << MODIFY DATA IN GAME >>
 
 local player = game.Players.ForeverHD
-local main = require(game.ReplicatedStorage.HDAdminContainer.SharedModules.MainFramework) local modules = main.modules
+local main = _G.HDAdminMain
+local modules = main.modules
 modules.DataStore:ChangeStat(player, "Donor", true)
 	
 --]]
