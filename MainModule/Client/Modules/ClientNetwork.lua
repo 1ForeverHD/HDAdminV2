@@ -2,7 +2,8 @@ local module = {}
 
 
 -- << RETRIEVE FRAMEWORK >>
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework) local modules = main.modules
+local main = _G.HDAdminMain
+local modules = main.modules
 
 
 
@@ -12,10 +13,10 @@ local topBarFrame = main.gui.CustomTopBar
 
 
 -- << SETUP >>
-for _,revent in pairs(main.network:GetChildren()) do
+for _,revent in pairs(main.signals:GetChildren()) do
 	if revent:IsA("RemoteEvent") then
 		revent.OnClientEvent:Connect(function(args)
-			if not main.Initialized then main.container.Assets.Bindables.Initialized.Event:Wait() end
+			if not main.initialized then main.client.Signals.Initialized.Event:Wait() end
 			
 			---------------------------------------------
 			if revent.Name == "ChangeStat" then
@@ -94,7 +95,7 @@ for _,revent in pairs(main.network:GetChildren()) do
 			
 			elseif revent.Name == "RankChanged" then
 				modules.GUIs:DisplayPagesAccordingToRank(true)
-				if main.Initialized then
+				if main.initialized then
 					modules.PageCommands:CreateCommands()
 				end
 				
@@ -149,6 +150,12 @@ for _,revent in pairs(main.network:GetChildren()) do
 			
 			elseif revent.Name == "DeactivateClientCommand" then
 				modules.cf:DeactivateCommand(args[1])
+			
+			elseif revent.Name == "FadeInIcon" then
+				local topBarFrame = main.gui.CustomTopBar
+				local imageButton = topBarFrame.ImageButton
+				imageButton.ImageTransparency = 1
+				main.tweenService:Create(imageButton, TweenInfo.new(1), {ImageTransparency = 0}):Play()
 				
 				
 					
@@ -166,7 +173,7 @@ for _,revent in pairs(main.network:GetChildren()) do
 	
 	elseif revent:IsA("RemoteFunction") then
 		function revent.OnClientInvoke(args)
-			if not main.Initialized then main.container.Assets.Bindables.Initialized.Event:Wait() end
+			if not main.initialized then main.client.Signals.Initialized.Event:Wait() end
 			
 			---------------------------------------------
 			if revent.Name == "GetLocalDate" then
