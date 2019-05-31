@@ -2,7 +2,9 @@ local module = {}
 
 
 -- << RETRIEVE FRAMEWORK >>
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework) local modules = main.modules local settings = main.settings
+local main = _G.HDAdminMain
+local modules = main.modules
+local settings = main.settings
 
 
 
