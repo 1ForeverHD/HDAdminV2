@@ -1,5 +1,5 @@
 -- << RETRIEVE FRAMEWORK >>
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework)
+local main = _G.HDAdminMain
 local modules = main.modules
 local settings = main.settings
 
@@ -72,7 +72,7 @@ local module = {
 		UnFunction = function(speaker, args)
 			local humanoid = modules.cf:GetHumanoid(speaker)
 			if humanoid then
-				main.network.ChangeCameraSubject:FireClient(speaker, (humanoid))
+				main.signals.ChangeCameraSubject:FireClient(speaker, (humanoid))
 			end
 		end
 		};
@@ -89,14 +89,14 @@ local module = {
 					for a,b in pairs(plr.Character:GetChildren()) do
 						if b:IsA("BasePart") and b:FindFirstChild("HDNightVision") == nil then
 							for i = 1,6 do
-								local nv = main.assets.NightVision:Clone()
+								local nv = main.client.Assets.NightVision:Clone()
 								nv.Parent = b 
 								nv.Face = i-1
 								nv.Name = "HDAdminNightVision"
 							end
 						end
 					end
-					local nv = main.assets.Nickname:Clone()
+					local nv = main.client.Assets.Nickname:Clone()
 					nv.TextLabel.Text = plr.Name
 					nv.Parent = head
 					nv.Name = "HDAdminNightVision"
@@ -154,7 +154,7 @@ local module = {
 				wait()
 			end
 			local function poop(clone,toilet,sound_id,poopCount, poopGroup)
-				local poop = main.assets.Poop:Clone()
+				local poop = main.client.Assets.Poop:Clone()
 				poopSound(sound_id,poop)
 				poop.CanCollide = false
 				poop.CFrame = toilet.Seat.CFrame * CFrame.new(0,(poopCount*1)-0.5,0)
@@ -182,7 +182,7 @@ local module = {
 			
 			local poopCount = 0
 			local poopGroup = Instance.new("Model",workspace)
-			local toilet = main.assets.Toilet:Clone()
+			local toilet = main.client.Assets.Toilet:Clone()
 			
 			poopGroup.Name = plr.Name.."'s poop"
 			toilet.PrimaryPart = toilet.Seat
@@ -270,7 +270,7 @@ local module = {
 			--modules.cf:SetTransparency(plr.Character, 1)
 			
 			--Create van
-			local van = main.assets.IcecreamVan:Clone()
+			local van = main.client.Assets.IcecreamVan:Clone()
 			van.PrimaryPart = van.VanDoor.Part1
 			van:SetPrimaryPartCFrame(hrp.CFrame * CFrame.new(-210,3,-4) * CFrame.Angles(0,math.rad(90), 0))
 			van.Parent = workspace
@@ -451,7 +451,7 @@ local module = {
 						neck.C0 = lookCFrame
 						if tick() - 0.6 > lastUpdate then
 							lastUpdate = tick()
-							main.network.UpdateNearbyPlayers:FireServer("laserEyes", {targetCFrame, lookCFrame})
+							main.signals.UpdateNearbyPlayers:FireServer("laserEyes", {targetCFrame, lookCFrame})
 						end
 						if hit and not exceededMaxDistance and (hit.Parent:FindFirstChild("Humanoid") or hit.Name == "Handle") then
 							fire.Enabled = true
@@ -598,6 +598,64 @@ local module = {
 	["clip"] = {
 		Function = function(speaker, args, self)
 			modules.cf:DeactivateCommand("noclip")
+		end;
+		};
+	
+	
+	
+	
+	----------------------------------------------------------------------
+	["boing"] = {
+		ExpandTime = 4;
+		ExpandAmount = 3;
+		EndBoing = {};
+		Function = function(speaker, args, self)
+			local plr = args[1]
+			local head = modules.cf:GetHead(plr)
+			local humanoid = modules.cf:GetHumanoid(plr)
+			if head and humanoid and not self.UnFunction(speaker, args, self) then
+				local headMesh = head:FindFirstChild("Mesh")
+				if headMesh then
+					local hats = {}
+					local character = plr.Character
+					for a,b in pairs(character:GetChildren()) do
+						if b:IsA("Accessory") then
+							table.insert(hats, b)
+							b.Parent = nil
+						end
+					end
+					local originalScale = headMesh.Scale
+					local tween = main.tweenService:Create(headMesh, TweenInfo.new(self.ExpandTime, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out), {Scale = Vector3.new(originalScale.X, originalScale.Y * self.ExpandAmount, originalScale.Z)})
+					tween:Play()
+					--
+					local endEvent = Instance.new("BindableEvent")
+					self.EndBoing[plr] = endEvent
+					modules.cf:WaitForEvent(endEvent, humanoid.Died, plr.CharacterAdded)
+					self.EndBoing[plr] = nil
+					endEvent:Destroy()
+					--
+					if headMesh then
+						local tween = main.tweenService:Create(headMesh, TweenInfo.new(2, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out), {Scale = originalScale})
+						tween:Play()
+						tween.Completed:Wait()
+					end
+					for i,v in pairs(hats) do
+						if character then
+							v.Parent = character
+						else
+							v:Destroy()
+						end
+					end
+				end
+			end
+		end;
+		UnFunction = function(speaker, args, self)
+			local plr = args[1]
+			local endEvent = self.EndBoing[plr]
+			if endEvent then
+				endEvent:Fire()
+				return true
+			end
 		end;
 		};
 	
