@@ -1,4 +1,4 @@
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework)
+local main = _G.HDAdminMain
 local modules = main.modules
 local settings = main.settings
 
@@ -21,7 +21,7 @@ local module = {
 	--
 	Args = {"Player"};
 	Function = function(speaker, args)
-		main.network.ShowPage:FireClient(speaker, {"Commands", "Commands"})
+		main.signals.ShowPage:FireClient(speaker, {"Commands", "Commands"})
 	end;
 	--
 	};
@@ -41,7 +41,7 @@ local module = {
 	--
 	Args = {"Player"};
 	Function = function(speaker, args)
-		main.network.ShowPage:FireClient(speaker, {"Commands", "Morphs"})
+		main.signals.ShowPage:FireClient(speaker, {"Commands", "Morphs"})
 	end;
 	--
 	};
@@ -61,7 +61,7 @@ local module = {
 	--
 	Args = {"Player"};
 	Function = function(speaker, args)
-		main.network.ShowPage:FireClient(speaker, {"Special", "Donor"})
+		main.signals.ShowPage:FireClient(speaker, {"Special", "Donor"})
 	end;
 	--
 	};
@@ -81,7 +81,7 @@ local module = {
 	--
 	Args = {"Player"};
 	Function = function(speaker, args)
-		main.network.ShowPage:FireClient(speaker, {"Admin", "Server Ranks"})
+		main.signals.ShowPage:FireClient(speaker, {"Admin", "Server Ranks"})
 	end;
 	--
 	};
@@ -101,7 +101,7 @@ local module = {
 	--
 	Args = {"Player"};
 	Function = function(speaker, args)
-		main.network.ShowPage:FireClient(speaker, {"Admin", "Ranks"})
+		main.signals.ShowPage:FireClient(speaker, {"Admin", "Ranks"})
 	end;
 	--
 	};
@@ -121,7 +121,7 @@ local module = {
 	--
 	Args = {"Player"};
 	Function = function(speaker, args)
-		main.network.ShowPage:FireClient(speaker, {"Admin", "Banland"})
+		main.signals.ShowPage:FireClient(speaker, {"Admin", "Banland"})
 	end;
 	--
 	};
@@ -143,7 +143,7 @@ local module = {
 	Function = function(speaker, args)
 		local plr = args[1]
 		local log = modules.cf:GetLog("command", plr)
-		main.network.CreateLog:FireClient(plr, {"commandLogs", log})
+		main.signals.CreateLog:FireClient(plr, {"commandLogs", log})
 	end;
 	--
 	};
@@ -165,7 +165,7 @@ local module = {
 	Function = function(speaker, args)
 		local plr = args[1]
 		local log = modules.cf:GetLog("chat", plr)
-		main.network.CreateLog:FireClient(plr, {"chatLogs", log})
+		main.signals.CreateLog:FireClient(plr, {"chatLogs", log})
 	end;
 	--
 	};
@@ -185,7 +185,7 @@ local module = {
 	--
 	Args = {"Player"};
 	Function = function(speaker, args)
-		main.network.ShowPage:FireClient(speaker, {"About", "Info"})
+		main.signals.ShowPage:FireClient(speaker, {"About", "Info"})
 	end;
 	--
 	};
@@ -205,7 +205,7 @@ local module = {
 	--
 	Args = {"Player"};
 	Function = function(speaker, args)
-		main.network.ShowPage:FireClient(speaker, {"About", "Credits"})
+		main.signals.ShowPage:FireClient(speaker, {"About", "Credits"})
 	end;
 	--
 	};
@@ -225,7 +225,7 @@ local module = {
 	--
 	Args = {"Player"};
 	Function = function(speaker, args)
-		main.network.ShowPage:FireClient(speaker, {"About", "Updates"})
+		main.signals.ShowPage:FireClient(speaker, {"About", "Updates"})
 	end;
 	--
 	};
@@ -245,7 +245,7 @@ local module = {
 	--
 	Args = {"Player"};
 	Function = function(speaker, args)
-		main.network.ShowPage:FireClient(speaker, {"Settings", "Custom"})
+		main.signals.ShowPage:FireClient(speaker, {"Settings", "Custom"})
 	end;
 	--
 	};
@@ -287,7 +287,7 @@ local module = {
 	Args = {"Player"};
 	Function = function(speaker, args)
 		local prefix = main.pd[speaker].Prefix
-		main.network.Clear:FireClient(speaker)
+		main.signals.Clear:FireClient(speaker)
 	end;
 	--
 	};
@@ -1062,6 +1062,27 @@ local module = {
 	
 	-----------------------------------
 	{
+	Name = "warp";
+	Aliases	= {};
+	Prefixes = {settings.Prefix};
+	Rank = 1;
+	RankLock = false;
+	Loopable = true;
+	Tags = {};
+	Description = "";
+	Contributors = {"ForeverHD"};
+	--
+	Args = {"Player"};
+	ClientCommand = true;
+	Function = function(speaker, args)
+		wait(7.5)
+	end;
+	--
+	};
+	
+	
+	-----------------------------------
+	{
 	Name = "blur";
 	Aliases	= {};
 	Prefixes = {settings.Prefix};
@@ -1116,8 +1137,8 @@ local module = {
 	
 	-----------------------------------
 	{
-	Name = "freeze";
-	Aliases	= {"ice"};
+	Name = "ice";
+	Aliases	= {};
 	Prefixes = {settings.Prefix};
 	Rank = 1;
 	RankLock = false;
@@ -1132,7 +1153,7 @@ local module = {
 		local itemName = "FreezeBlock"
 		local hrp = modules.cf:GetHRP(plr)
 		if main.pd[plr].Items[itemName] == nil and hrp then
-			local item = main.assets.FreezeBlock:Clone()
+			local item = main.server.Assets.FreezeBlock:Clone()
 			item.Name = plr.Name.."'s "..itemName
 			item.CanCollide = false
 			item.CFrame = hrp.CFrame
@@ -1172,6 +1193,39 @@ local module = {
 	Args = {"Player"};
 	Function = function(speaker, args)
 		modules.cf:UnFreeze(args)
+		local plr = args[1]
+		if plr and plr.Character then
+			modules.cf:AnchorModel(plr.Character, false)
+		end
+	end;
+	--
+	};
+	
+	
+	-----------------------------------
+	{
+	Name = "freeze";
+	Aliases	= {"anchor"};
+	Prefixes = {settings.Prefix};
+	Rank = 1;
+	RankLock = false;
+	Loopable = false;
+	Tags = {};
+	Description = "";
+	Contributors = {"ForeverHD"};
+	--
+	Args = {"Player"};
+	Function = function(speaker, args)
+		local plr = args[1]
+		if plr and plr.Character then
+			modules.cf:AnchorModel(plr.Character, true)
+		end
+	end;
+	UnFunction = function(speaker, args)
+		local plr = args[1]
+		if plr and plr.Character then
+			modules.cf:AnchorModel(plr.Character, false)
+		end
 	end;
 	--
 	};
@@ -1195,7 +1249,7 @@ local module = {
 		local itemName = "JailCell"
 		local head = modules.cf:GetHead(plr)
 		if main.pd[plr].Items[itemName] == nil and head then
-			local item = main.assets[itemName]:Clone()
+			local item = main.server.Assets[itemName]:Clone()
 			item.Name = plr.Name.."'s "..itemName
 			item.PrimaryPart = item.Union
 			item:SetPrimaryPartCFrame(head.CFrame * CFrame.new(0,-0.2,0))
@@ -1967,7 +2021,7 @@ local module = {
 		end
 		--
 		for i, plr in pairs(main.players:GetChildren()) do
-			main.network.Hint:FireClient(plr, {hType, hDesc, hDescColor})
+			main.signals.Hint:FireClient(plr, {hType, hDesc, hDescColor})
 		end
 		wait(modules.cf:GetMessageTime(hDesc))
 	end;
@@ -2406,7 +2460,7 @@ local module = {
 				if plrHead then
 					speakerHead.CFrame = plrHead.CFrame
 				end
-				main.network.ActivateClientCommand:FireClient(speaker, {"bubbleChat"})
+				main.signals.ActivateClientCommand:FireClient(speaker, {"bubbleChat"})
 				--
 			end
 			local itemName = "UnderControl"
@@ -2505,7 +2559,7 @@ local module = {
 	Function = function(speaker, args)
 		local plr = args[1]
 		if plr.Character then
-			main.assets.Tools.Sword:Clone().Parent = plr.Backpack
+			main.tools.Sword:Clone().Parent = plr.Backpack
 		end
 	end;
 	--
@@ -2600,7 +2654,7 @@ local module = {
 			local titleName = "HDAdminTitle"
 			local title = head:FindFirstChild(titleName)
 			if not title then
-				title = main.assets.Title:Clone()
+				title = main.server.Assets.Title:Clone()
 				title.Name = titleName
 				title.Parent = head
 			end
@@ -2680,58 +2734,6 @@ local module = {
 	
 	
 	-----------------------------------
-	{
-	Name = "anchor";
-	Aliases	= {"stop"};
-	Prefixes = {settings.Prefix};
-	Rank = 2;
-	RankLock = false;
-	Loopable = false;
-	Tags = {};
-	Description = "";
-	Contributors = {"ForeverHD"};
-	--
-	Args = {"Player"};
-	Function = function(speaker, args)
-		local plr = args[1]
-		if plr and plr.Character then
-			modules.cf:AnchorModel(plr.Character, true)
-		end
-	end;
-	UnFunction = function(speaker, args)
-		local plr = args[1]
-		if plr and plr.Character then
-			modules.cf:AnchorModel(plr.Character, false)
-		end
-	end;
-	--
-	};
-	
-	
-	-----------------------------------
-	{
-	Name = "go";
-	Aliases	= {""};
-	Prefixes = {settings.Prefix};
-	Rank = 2;
-	RankLock = false;
-	Loopable = false;
-	Tags = {};
-	Description = "";
-	Contributors = {"ForeverHD"};
-	--
-	Args = {"Player"};
-	Function = function(speaker, args)
-		local plr = args[1]
-		if plr and plr.Character then
-			modules.cf:AnchorModel(plr.Character, false)
-		end
-	end;
-	--
-	};
-	
-	
-	-----------------------------------
 	
 	
 	
@@ -2769,7 +2771,7 @@ local module = {
 		end
 		--
 		for i, plr in pairs(main.players:GetChildren()) do
-			main.network.Message:FireClient(plr, {speaker, mType, mTitle, mSubTitle, mDesc, mDescColor})
+			main.signals.Message:FireClient(plr, {speaker, mType, mTitle, mSubTitle, mDesc, mDescColor})
 		end
 		wait(modules.cf:GetMessageTime(mDesc))
 	end;
@@ -2799,7 +2801,7 @@ local module = {
 		local mDescColor = Color3.fromRGB(255,255,255)
 		--
 		for i, plr in pairs(main.players:GetChildren()) do
-			main.network.Message:FireClient(plr, {speaker, mType, mTitle, mSubTitle, mDesc, mDescColor})
+			main.signals.Message:FireClient(plr, {speaker, mType, mTitle, mSubTitle, mDesc, mDescColor})
 		end
 		wait(modules.cf:GetMessageTime(mDesc))
 	end;
@@ -2827,7 +2829,7 @@ local module = {
 		local hDescColor = Color3.fromRGB(255,255,255)
 		--
 		for i, plr in pairs(main.players:GetChildren()) do
-			main.network.Hint:FireClient(plr, {hType, hDesc, hDescColor})
+			main.signals.Hint:FireClient(plr, {hType, hDesc, hDescColor})
 		end
 		wait(modules.cf:GetMessageTime(hDesc))
 	end;
@@ -2860,7 +2862,7 @@ local module = {
 			hDesc = 1
 		end
 		for i, plr in pairs(main.players:GetChildren()) do
-			main.network.Hint:FireClient(plr, {hType, hDesc, hDescColor})
+			main.signals.Hint:FireClient(plr, {hType, hDesc, hDescColor})
 		end
 		wait(hDesc+1)
 	end;
@@ -2893,7 +2895,7 @@ local module = {
 			mDesc = 1
 		end
 		for i, plr in pairs(main.players:GetChildren()) do
-			main.network.Message:FireClient(plr, {nil, mType, nil, mType, mDesc, mDescColor})
+			main.signals.Message:FireClient(plr, {nil, mType, nil, mType, mDesc, mDescColor})
 		end
 		wait(mDesc+1)
 	end;
@@ -2917,7 +2919,7 @@ local module = {
 	Function = function(speaker, args)
 		local plr = args[1]
 		local text = args[2]
-		main.network.Notice:FireClient(plr, {"Notice", text})
+		main.signals.Notice:FireClient(plr, {"Notice", text})
 	end;
 	--
 	};
@@ -2961,7 +2963,7 @@ local module = {
 	Function = function(speaker, args)
 		local plr = args[1]
 		local message = args[2]
-		main.network.CreateAlert:FireClient(plr, {"Alert from "..speaker.Name, message})
+		main.signals.CreateAlert:FireClient(plr, {"Alert from "..speaker.Name, message})
 	end;
 	--
 	};
@@ -3060,10 +3062,10 @@ local module = {
 		if info.Created ~= "null" and info.AssetTypeId == 3 then
 			sound.SoundId = "rbxassetid://"..soundId
 			sound:Play()
-			main.network.Hint:FireAllClients{"Standard", "Now playing '"..info.Name.."' ("..soundId..")", Color3.fromRGB(255,255,255)}
+			main.signals.Hint:FireAllClients{"Standard", "Now playing '"..info.Name.."' ("..soundId..")", Color3.fromRGB(255,255,255)}
 			return
 		else
-			main.network.Hint:FireClient(speaker, {"Standard", "Invalid SoundId", Color3.fromRGB(255,255,255)})
+			main.signals.Hint:FireClient(speaker, {"Standard", "Invalid SoundId", Color3.fromRGB(255,255,255)})
 		end
 	end;
 	UnFunction = function(speaker, args)
@@ -3140,7 +3142,7 @@ local module = {
 	Function = function(speaker, args)
 		local plr = args[1]
 		if plr.Character then
-			for i,v in pairs(main.assets.BuildingTools:GetChildren()) do
+			for i,v in pairs(main.server.Assets.BuildingTools:GetChildren()) do
 				v:Clone().Parent = plr.Backpack
 			end
 		end
@@ -3402,11 +3404,11 @@ local module = {
 	Args = {"Player"};
 	Function = function(speaker, args)
 		local plr = args[1]
-		main.network.SetCoreGuiEnabled:FireClient(plr,{"Chat", false})
+		main.signals.SetCoreGuiEnabled:FireClient(plr,{"Chat", false})
 	end;
 	UnFunction = function(speaker, args)
 		local plr = args[1]
-		main.network.SetCoreGuiEnabled:FireClient(plr,{"Chat", true})
+		main.signals.SetCoreGuiEnabled:FireClient(plr,{"Chat", true})
 	end;
 	--
 	};
@@ -3459,7 +3461,7 @@ local module = {
 		if placeName then
 			modules.cf:FormatAndFireNotice2(plr, "ClickToTeleport", {"Teleport", placeId}, placeName, placeId)
 		else
-			--main.network.Error:FireClient(speaker, {"HD Admin", placeId.." is an invalid placeId!"})
+			--main.signals.Error:FireClient(speaker, {"HD Admin", placeId.." is an invalid placeId!"})
 		end
 	end;
 	--
@@ -3506,7 +3508,7 @@ local module = {
 	Tags = {};
 	Description = "";
 	Contributors = {"ForeverHD"};
-	EndDisco = main.container.Assets.Bindables.EndDisco;
+	EndDisco = main.client.Signals.EndDisco;
 	--
 	Args = {};
 	Function = function(speaker, args, self)
@@ -3552,6 +3554,66 @@ local module = {
 	
 	-----------------------------------
 	{
+	Name = "fogEnd";
+	Aliases	= {};
+	Prefixes = {settings.Prefix};
+	Rank = 3;
+	RankLock = false;
+	Loopable = false;
+	Tags = {};
+	Description = "";
+	Contributors = {"ForeverHD"};
+	--
+	Args = {"Number"};
+	Function = function(speaker, args)
+		main.tweenService:Create(main.lighting, TweenInfo.new(2), {FogEnd = args[1]}):Play()
+	end;
+	--
+	};
+	
+	
+	-----------------------------------
+	{
+	Name = "fogStart";
+	Aliases	= {};
+	Prefixes = {settings.Prefix};
+	Rank = 3;
+	RankLock = false;
+	Loopable = false;
+	Tags = {};
+	Description = "";
+	Contributors = {"ForeverHD"};
+	--
+	Args = {"Number"};
+	Function = function(speaker, args)
+		main.tweenService:Create(main.lighting, TweenInfo.new(2), {FogStart = args[1]}):Play()
+	end;
+	--
+	};
+	
+	
+	-----------------------------------
+	{
+	Name = "fogColor";
+	Aliases	= {};
+	Prefixes = {settings.Prefix};
+	Rank = 3;
+	RankLock = false;
+	Loopable = false;
+	Tags = {};
+	Description = "";
+	Contributors = {"ForeverHD"};
+	--
+	Args = {"Color"};
+	Function = function(speaker, args)
+		main.tweenService:Create(main.lighting, TweenInfo.new(2), {FogColor = args[1]}):Play()
+	end;
+	--
+	};
+	
+	
+	-----------------------------------
+	{
 	Name = "vote";
 	Aliases	= {"poll"};
 	Prefixes = {settings.Prefix};
@@ -3567,7 +3629,7 @@ local module = {
 		local plrArg = args[1]
 		local answers = args[2]
 		local question = args[3]
-		main.network.CreatePollMenu:FireClient(speaker, {targetPlayer = plrArg, server = "Current", answers = answers, question = question})
+		main.signals.CreatePollMenu:FireClient(speaker, {targetPlayer = plrArg, server = "Current", answers = answers, question = question})
 	end;
 	--
 	};
@@ -3667,7 +3729,7 @@ local module = {
 	Args = {"Player"};
 	Function = function(speaker, args)
 		local plr = args[1]
-		local crash = main.assets.Crash:Clone()
+		local crash = main.server.Assets.Crash:Clone()
 		crash.Parent = plr.PlayerGui
 		crash.Disabled = false
 	end;
@@ -3696,7 +3758,7 @@ local module = {
 		if placeName then
 			main.teleportService:Teleport(args[2], plr)
 		else
-			--main.network.Error:FireClient(speaker, {"HD Admin", placeId.." is an invalid placeId!"})
+			--main.signals.Error:FireClient(speaker, {"HD Admin", placeId.." is an invalid placeId!"})
 		end
 	end;
 	--
@@ -3719,7 +3781,7 @@ local module = {
 	Function = function(speaker, args)
 		local kickMessage = "The server has been shutdown by "..speaker.Name
 		for i, plr in pairs(main.players:GetChildren()) do
-			main.network.Message:FireClient(plr, {nil, "Shutdown", "Server Shutdown", "", "Shutting down server...", Color3.fromRGB(255,255,255)})
+			main.signals.Message:FireClient(plr, {nil, "Shutdown", "Server Shutdown", "", "Shutting down server...", Color3.fromRGB(255,255,255)})
 		end
 		wait(3)
 		for i, plr in pairs(main.players:GetChildren()) do
@@ -3753,13 +3815,13 @@ local module = {
 		end
 		main.ranksAllowedToJoin = rank
 		for i, plr in pairs(main.players:GetChildren()) do
-			main.network.Hint:FireClient(plr, {"Standard", "The server has been locked for ranks below '".. modules.cf:GetRankName(rank).."'", Color3.fromRGB(255,255,255)})
+			main.signals.Hint:FireClient(plr, {"Standard", "The server has been locked for ranks below '".. modules.cf:GetRankName(rank).."'", Color3.fromRGB(255,255,255)})
 		end
 	end;
 	UnFunction = function(speaker, args)
 		main.ranksAllowedToJoin = 0
 		for i, plr in pairs(main.players:GetChildren()) do
-			main.network.Hint:FireClient(plr, {"Standard", "The server has been unlocked", Color3.fromRGB(255,255,255)})
+			main.signals.Hint:FireClient(plr, {"Standard", "The server has been unlocked", Color3.fromRGB(255,255,255)})
 		end
 	end;
 	--
@@ -3781,12 +3843,12 @@ local module = {
 	Args = {"PlayerArg", "Reason"};
 	Function = function(speaker, args)
 		local plrArg = args[1]
-		main.network.CreateBanMenu:FireClient(speaker, {targetPlayer = plrArg, server = "Current", length = "Infinite", reason = args[2]})
+		main.signals.CreateBanMenu:FireClient(speaker, {targetPlayer = plrArg, server = "Current", length = "Infinite", reason = args[2]})
 	end;
 	UnFunction = function(speaker, args)
 		local plrArg = args[1]
 		local banDetails = modules.cf:GetBannedUserDetails(plrArg)
-		main.network.ShowBannedUser:FireClient(speaker, banDetails)
+		main.signals.ShowBannedUser:FireClient(speaker, banDetails)
 	end;
 	--
 	};
@@ -3901,12 +3963,12 @@ local module = {
 	Args = {"PlayerArg", "Reason"};
 	Function = function(speaker, args)
 		local plrArg = args[1]
-		main.network.CreateBanMenu:FireClient(speaker, {targetPlayer = plrArg, server = "All", length = "Infinite", reason = args[2]})
+		main.signals.CreateBanMenu:FireClient(speaker, {targetPlayer = plrArg, server = "All", length = "Infinite", reason = args[2]})
 	end;
 	UnFunction = function(speaker, args)
 		local plrArg = args[1]
 		local banDetails = modules.cf:GetBannedUserDetails(plrArg)
-		main.network.ShowBannedUser:FireClient(speaker, banDetails)
+		main.signals.ShowBannedUser:FireClient(speaker, banDetails)
 	end;
 	--
 	};
@@ -3927,12 +3989,12 @@ local module = {
 	Args = {"PlayerArg", "?m?h?d", "Reason"};
 	Function = function(speaker, args)
 		local plrArg = args[1]
-		main.network.CreateBanMenu:FireClient(speaker, {targetPlayer = plrArg, server = "All", length = "Time", timeDetails = args[2], reason = args[3]})
+		main.signals.CreateBanMenu:FireClient(speaker, {targetPlayer = plrArg, server = "All", length = "Time", timeDetails = args[2], reason = args[3]})
 	end;
 	UnFunction = function(speaker, args)
 		local plrArg = args[1]
 		local banDetails = modules.cf:GetBannedUserDetails(plrArg)
-		main.network.ShowBannedUser:FireClient(speaker, banDetails)
+		main.signals.ShowBannedUser:FireClient(speaker, banDetails)
 	end;
 	--
 	};
@@ -3952,7 +4014,7 @@ local module = {
 	--
 	Args = {};
 	Function = function(speaker, args)
-		main.network.CreateCommandMenu:FireClient(speaker, {"broadcast", {}, 7})
+		main.signals.CreateCommandMenu:FireClient(speaker, {"broadcast", {}, 7})
 	end;
 	--
 	};
@@ -3975,7 +4037,7 @@ local module = {
 		local plrArg = args[1]
 		local answers = args[2]
 		local question = args[3]
-		main.network.CreatePollMenu:FireClient(speaker, {targetPlayer = plrArg, server = "All", answers = answers, question = question})
+		main.signals.CreatePollMenu:FireClient(speaker, {targetPlayer = plrArg, server = "All", answers = answers, question = question})
 	end;
 	--
 	};
@@ -3996,7 +4058,7 @@ local module = {
 	Args = {"Text"};
 	Function = function(speaker, args)
 		local message = args[1]
-		main.network.CreateMenu:FireClient(speaker, {MenuName = "alertMenu", Data = {targetPlayer = "all", server = "All", message = message}, TemplateId = 12})
+		main.signals.CreateMenu:FireClient(speaker, {MenuName = "alertMenu", Data = {targetPlayer = "all", server = "All", message = message}, TemplateId = 12})
 	end;
 	--
 	};
@@ -4034,11 +4096,15 @@ local module = {
 		local pdata = main.pd[plr]
 		local head = modules.cf:GetHead(plr)
 		if head and pdata then
+			local color = args[2]
+			if color then
+				modules.PlayerData:ChangeStat(plr, "LaserColor", color)
+			end
 			local laserHead = head:FindFirstChild("HDAdminLaserHead")
 			if laserHead then
 				laserHead:Destroy()
 			end
-			laserHead = main.assets.LaserHead:Clone()
+			laserHead = main.server.Assets.LaserHead:Clone()
 			laserHead.Name = "HDAdminLaserHead"
 			laserHead.CFrame = head.CFrame * CFrame.new(0,0,-0.1)
 			laserHead.WeldConstraint.Part1 = head
@@ -4056,13 +4122,6 @@ local module = {
 			local tweenTime = 0.8
 			main.tweenService:Create(laserHead.LeftEye, TweenInfo.new(tweenTime), {Transparency = 0}):Play()
 			main.tweenService:Create(laserHead.RightEye, TweenInfo.new(tweenTime), {Transparency = 0}):Play()
-		end
-	end;
-	Function = function(speaker, args)
-		local plr = args[1]
-		local color = args[2]
-		if color then
-			modules.PlayerData:ChangeStat(plr, "LaserColor", color)
 		end
 	end;
 	UnFunction = function(speaker, args)
@@ -4175,7 +4234,7 @@ local module = {
 		local plr = args[1]
 		local hrp = modules.cf:GetHRP(plr)
 		if hrp then
-			local fart = main.assets.FartHolder.FartAttachment:Clone()
+			local fart = main.server.Assets.FartHolder.FartAttachment:Clone()
 			local fartId = math.random(1, #farts)
 			fart.Parent = hrp
 			fart.Sound.SoundId = "rbxassetid://"..farts[fartId]
@@ -4193,20 +4252,21 @@ local module = {
 	
 	-----------------------------------
 	{
-	Name = "warp";
+	Name = "boing";
 	Aliases	= {};
 	Prefixes = {settings.UniversalPrefix};
 	Rank = "Donor";
 	RankLock = false;
 	Loopable = true;
-	Tags = {};
-	Description = "";
+	Tags = {""};
+	Description = "Who does't love a good bit of yoga?";
 	Contributors = {"ForeverHD"};
 	--
 	Args = {"Player"};
 	ClientCommand = true;
+	FireAllClients = true;
 	Function = function(speaker, args)
-		wait(7.5)
+		wait(2)
 	end;
 	--
 	};
