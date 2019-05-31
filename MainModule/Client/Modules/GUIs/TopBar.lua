@@ -2,7 +2,8 @@ local module = {}
 
 
 -- << RETRIEVE FRAMEWORK >>
-local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.SharedModules.MainFramework) local modules = main.modules
+local main = _G.HDAdminMain
+local modules = main.modules
 
 
 
@@ -10,6 +11,7 @@ local main = require(game:GetService("ReplicatedStorage").HDAdminContainer.Share
 local topBarFrame = main.gui.CustomTopBar
 local topBarY = main.guiService:GetGuiInset().Y
 local mainFrame = main.gui.MainFrame
+local imageButton = topBarFrame.ImageButton
 
 
 
@@ -29,7 +31,7 @@ function module:CoreGUIsChanged()
 		if main.starterGui:GetCoreGuiEnabled("Backpack") then
 			enabledCount = enabledCount + 1
 		end
-		topBarFrame.ImageButton.Position = UDim2.new(0,50*enabledCount,0.1,0)
+		imageButton.Position = UDim2.new(0,50*enabledCount,0.1,0)
 		
 		--TopBar Transparency
 		main.playerGui:SetTopbarTransparency(1)
@@ -43,8 +45,8 @@ end
 -- Toggle MainFrame through TopBar Icon
 topBarFrame.Size = UDim2.new(1,0,0,topBarY)
 topBarFrame.Position = UDim2.new(0,0,0,-topBarY)
-topBarFrame.ImageButton.MouseButton1Down:Connect(function()
-	if topBarFrame.ImageButton.ImageColor3 == Color3.fromRGB(255,255,255) then
+imageButton.MouseButton1Down:Connect(function()
+	if imageButton.ImageColor3 == Color3.fromRGB(255,255,255) then
 		modules.GUIs:OpenMainFrame()
 	else
 		modules.GUIs:CloseMainFrame()
@@ -57,8 +59,11 @@ end)
 	For now I'll be using a loop. If you have a better solution, please get in contact with ForeverHD on the DevForum.
 --]]
 spawn(function()
-	while wait(0.5) do
+	imageButton.ImageTransparency = 1
+	topBarFrame.Visible = main.topbarEnabled
+	while true do
 		module:CoreGUIsChanged()
+		wait(0.5)
 	end
 end)
 
