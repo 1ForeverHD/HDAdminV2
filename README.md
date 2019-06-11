@@ -86,7 +86,7 @@ Displays an error notification to the specified player. If used on the client, '
 ```lua
 --In a Local Script
 local hdMain = require(game:GetService("ReplicatedStorage"):WaitForChild("HDAdminSetup")):GetMain()
-local hd = hdMain.modules.API
+local hd = hdMain:GetModule("API")
 hd:SetTopbarTransparency(1)
 ```
 
@@ -100,7 +100,7 @@ hd:SetTopbarTransparency(1)
 
 --Retrieve API
 local hdMain = require(game:GetService("ReplicatedStorage"):WaitForChild("HDAdminSetup")):GetMain()
-local hd = hdMain.modules.API
+local hd = hdMain:GetModule("API")
 
 --Define the rank-to-reward and setup the corresponding rankId and rankName
 local rank = "Mod"
