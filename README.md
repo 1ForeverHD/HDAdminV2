@@ -29,7 +29,7 @@
 ## Retrieving HD
 ```lua
 local hdMain = require(game:GetService("ReplicatedStorage"):WaitForChild("HDAdminSetup")):GetMain()
-local hd = hdMain.modules.API
+local hd = hdMain:GetModule("API")
 ```
 
 ## Key Parameters
