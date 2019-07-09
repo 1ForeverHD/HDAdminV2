@@ -16,12 +16,12 @@
 
 # Tutorials
 1. ### [An introduction to HD Admin](https://www.youtube.com/watch?v=8_wMQLJF5ds&list=PLsbxI7NIoTthZXpsd_-_Ab5c0OZ5alA0j&index=1)
-2. ### [Setting up Ranks and Specific Users](https://www.youtube.com/watch?v=8_wMQLJF5ds&list=PLsbxI7NIoTthZXpsd_-_Ab5c0OZ5alA0j&index=2)
-3. ### [Setting up Gamepasses and Assets](https://www.youtube.com/watch?v=8_wMQLJF5ds&list=PLsbxI7NIoTthZXpsd_-_Ab5c0OZ5alA0j&index=3)
-4. ### [Setting up Groups](https://www.youtube.com/watch?v=8_wMQLJF5ds&list=PLsbxI7NIoTthZXpsd_-_Ab5c0OZ5alA0j&index=4)
-5. ### [Setting up Friends, VIP Servers and Free Admin](https://www.youtube.com/watch?v=8_wMQLJF5ds&list=PLsbxI7NIoTthZXpsd_-_Ab5c0OZ5alA0j&index=5)
-6. ### [Modify System Settings](https://www.youtube.com/watch?v=8_wMQLJF5ds&list=PLsbxI7NIoTthZXpsd_-_Ab5c0OZ5alA0j&index=6)
-7. ### [Adding Custom Morphs and Tools](https://www.youtube.com/watch?v=8_wMQLJF5ds&list=PLsbxI7NIoTthZXpsd_-_Ab5c0OZ5alA0j&index=7)
+2. ### [Setting up Ranks and Specific Users](https://www.youtube.com/watch?v=_M3jZj2H3nc&list=PLsbxI7NIoTthZXpsd_-_Ab5c0OZ5alA0j&index=2)
+3. ### [Setting up Gamepasses and Assets](https://www.youtube.com/watch?v=Z3Ni5ilgkTc&list=PLsbxI7NIoTthZXpsd_-_Ab5c0OZ5alA0j&index=3)
+4. ### [Setting up Groups](https://www.youtube.com/watch?v=qfGroFXeZ80&list=PLsbxI7NIoTthZXpsd_-_Ab5c0OZ5alA0j&index=4)
+5. ### [Setting up Friends, VIP Servers and Free Admin](https://www.youtube.com/watch?v=3RolVPAC-NM&list=PLsbxI7NIoTthZXpsd_-_Ab5c0OZ5alA0j&index=5)
+6. ### [Modify System Settings](https://www.youtube.com/watch?v=Lzod5Tbxqi0&list=PLsbxI7NIoTthZXpsd_-_Ab5c0OZ5alA0j&index=6)
+7. ### [Adding Custom Morphs and Tools](https://www.youtube.com/watch?v=IpuSOKS1CgM&list=PLsbxI7NIoTthZXpsd_-_Ab5c0OZ5alA0j&index=7)
 8. ### [Modify Commands (coming soon)]()
 <br>
 
