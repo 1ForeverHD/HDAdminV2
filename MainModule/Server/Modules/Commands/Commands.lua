@@ -1153,7 +1153,7 @@ local module = {
 		local itemName = "FreezeBlock"
 		local hrp = modules.cf:GetHRP(plr)
 		if main.pd[plr].Items[itemName] == nil and hrp then
-			local item = main.server.Assets.FreezeBlock:Clone()
+			local item = main.assets.FreezeBlock:Clone()
 			item.Name = plr.Name.."'s "..itemName
 			item.CanCollide = false
 			item.CFrame = hrp.CFrame
@@ -1249,7 +1249,7 @@ local module = {
 		local itemName = "JailCell"
 		local head = modules.cf:GetHead(plr)
 		if main.pd[plr].Items[itemName] == nil and head then
-			local item = main.server.Assets[itemName]:Clone()
+			local item = main.assets[itemName]:Clone()
 			item.Name = plr.Name.."'s "..itemName
 			item.PrimaryPart = item.Union
 			item:SetPrimaryPartCFrame(head.CFrame * CFrame.new(0,-0.2,0))
@@ -2654,7 +2654,7 @@ local module = {
 			local titleName = "HDAdminTitle"
 			local title = head:FindFirstChild(titleName)
 			if not title then
-				title = main.server.Assets.Title:Clone()
+				title = main.assets.Title:Clone()
 				title.Name = titleName
 				title.Parent = head
 			end
@@ -3142,7 +3142,7 @@ local module = {
 	Function = function(speaker, args)
 		local plr = args[1]
 		if plr.Character then
-			for i,v in pairs(main.server.Assets.BuildingTools:GetChildren()) do
+			for i,v in pairs(main.assets.BuildingTools:GetChildren()) do
 				v:Clone().Parent = plr.Backpack
 			end
 		end
@@ -3729,7 +3729,7 @@ local module = {
 	Args = {"Player"};
 	Function = function(speaker, args)
 		local plr = args[1]
-		local crash = main.server.Assets.Crash:Clone()
+		local crash = main.assets.Crash:Clone()
 		crash.Parent = plr.PlayerGui
 		crash.Disabled = false
 	end;
@@ -4096,15 +4096,11 @@ local module = {
 		local pdata = main.pd[plr]
 		local head = modules.cf:GetHead(plr)
 		if head and pdata then
-			local color = args[2]
-			if color then
-				modules.PlayerData:ChangeStat(plr, "LaserColor", color)
-			end
 			local laserHead = head:FindFirstChild("HDAdminLaserHead")
 			if laserHead then
 				laserHead:Destroy()
 			end
-			laserHead = main.server.Assets.LaserHead:Clone()
+			laserHead = main.assets.LaserHead:Clone()
 			laserHead.Name = "HDAdminLaserHead"
 			laserHead.CFrame = head.CFrame * CFrame.new(0,0,-0.1)
 			laserHead.WeldConstraint.Part1 = head
@@ -4122,6 +4118,13 @@ local module = {
 			local tweenTime = 0.8
 			main.tweenService:Create(laserHead.LeftEye, TweenInfo.new(tweenTime), {Transparency = 0}):Play()
 			main.tweenService:Create(laserHead.RightEye, TweenInfo.new(tweenTime), {Transparency = 0}):Play()
+		end
+	end;
+	Function = function(speaker, args)
+		local plr = args[1]
+		local color = args[2]
+		if color then
+			modules.PlayerData:ChangeStat(plr, "LaserColor", color)
 		end
 	end;
 	UnFunction = function(speaker, args)
@@ -4234,7 +4237,7 @@ local module = {
 		local plr = args[1]
 		local hrp = modules.cf:GetHRP(plr)
 		if hrp then
-			local fart = main.server.Assets.FartHolder.FartAttachment:Clone()
+			local fart = main.assets.FartHolder.FartAttachment:Clone()
 			local fartId = math.random(1, #farts)
 			fart.Parent = hrp
 			fart.Sound.SoundId = "rbxassetid://"..farts[fartId]
