@@ -3671,6 +3671,45 @@ local module = {
 	
 	
 	-----------------------------------
+	{
+	Name = "lockPlayer";
+	Aliases	= {"lockPlr", "lockp", "lock"};
+	Prefixes = {settings.Prefix};
+	Rank = 4;
+	RankLock = false;
+	Loopable = false;
+	Tags = {""};
+	Description = "Locks all parts with the specified player.";
+	Contributors = {"ForeverHD"};
+	--
+	Args = {"Player"};
+	Function = function(speaker, args)
+		local plr = args[1]
+		local char = plr and plr.Character
+		if char then
+			for a,b in pairs(char:GetDescendants()) do
+				if b:IsA("BasePart") then
+					b.Locked = true
+				end
+			end
+		end
+	end;
+	UnFunction = function(speaker, args)
+		local plr = args[1]
+		local char = plr and plr.Character
+		if char then
+			for a,b in pairs(char:GetDescendants()) do
+				if b:IsA("BasePart") then
+					b.Locked = false
+				end
+			end
+		end
+	end;
+	--
+	};
+	
+	
+	-----------------------------------
 	
 	
 	
@@ -3684,7 +3723,7 @@ local module = {
 	----------------------------------- (4) HEADADMIN COMMANDS -----------------------------------
 	{
 	Name = "lockMap";
-	Aliases	= {"lock"};
+	Aliases	= {"lockM"};
 	Prefixes = {settings.Prefix};
 	Rank = 4;
 	RankLock = false;
