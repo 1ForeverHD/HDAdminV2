@@ -314,7 +314,7 @@ function module:SetTransparency(model, value, force)
 			elseif not fakeParts or model:FindFirstChild(b.Name.."Fake") == nil then --string.sub(b.Name,1,4) == "Fake" then
 				b.Transparency = value
 			end
-		elseif (b:IsA("ParticleEmitter") and b.Name == "BodyEffect") or b:IsA("PointLight") then
+		elseif (b:IsA("ParticleEmitter") and b.Name == "BodyEffect") or b:IsA("PointLight") or b:IsA("Beam") then
 			if value == 1 then
 				b.Enabled = false
 			elseif value == 0 then
@@ -325,6 +325,12 @@ function module:SetTransparency(model, value, force)
 				b.Enabled = false
 			elseif value == 0 then
 				b.Enabled = true
+			end
+		elseif b:IsA("ForceField") or b:IsA("Constraint") then
+			if value == 1 then
+				b.Visible = false
+			elseif value == 0 then
+				b.Visible = true
 			end
 		end
 	end
