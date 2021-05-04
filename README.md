@@ -1,3 +1,15 @@
+**Important update 2021**
+
+This repository does not reflect the latest code from HD Admin, you can find that instead at the [MainModule](https://www.roblox.com/library/3239236979/HD-Admin-V2-MainModule). 
+
+HD Admin was a passion project I began working on all the way back in 2016, almost 5 years ago now. It’s been overwhelming to see the positive reception and uptake of the application, however to say it was outdated would be a slight understatement.
+
+While I still provide regular bug-fixes/patches for HD Admin, you may have noticed we haven’t added new features or commands for a few years now. This is because over the last 2 years we’ve been working towards a new administration system to release 2021 - Nanoblox. You can follow our progress at [github.com/nanoblox](https://github.com/nanoblox).
+
+~ Ben (ForeverHD)
+
+--------------------
+
 <div align="center">
     <img src="assets/HDAdminLogo.png" alt="Rojo" height="217" />
 </div>
